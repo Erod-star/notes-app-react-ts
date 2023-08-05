@@ -19,16 +19,22 @@ interface NoteFormProps {
   onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
   availableTags: Tag[];
+  title?: string;
+  markdown?: string;
+  tags?: Tag[];
 }
 
 export const NoteForm = ({
   onSubmit,
   onAddTag,
   availableTags,
+  title = "",
+  markdown = "",
+  tags = [],
 }: NoteFormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
   const navigate = useNavigate();
 
   // ? Methods
@@ -47,6 +53,7 @@ export const NoteForm = ({
         markdown: markdownRef.current.value,
         tags: selectedTags,
       });
+      // navigate("..", { replace: true });
       navigate("..");
     }
   };
@@ -57,11 +64,12 @@ export const NoteForm = ({
         <Flex justify="space-between" mb="1.5em">
           <Box w="49%">
             <FormLabel>Title</FormLabel>
-            <Input ref={titleRef} type="text" isRequired />
+            <Input ref={titleRef} type="text" isRequired defaultValue={title} />
           </Box>
           <Box w="49%">
             <FormLabel>Tags</FormLabel>
             <CreateReactSelect
+              onCreateOption={handleCreateOption}
               value={selectedTags.map((tag) => {
                 return { label: tag.label, value: tag.id };
               })}
@@ -75,14 +83,13 @@ export const NoteForm = ({
                   })
                 );
               }}
-              onCreateOption={handleCreateOption}
               isMulti
             />
           </Box>
         </Flex>
         <Flex justify="center" direction="column">
           <FormLabel>Body</FormLabel>
-          <Textarea ref={markdownRef} isRequired />
+          <Textarea ref={markdownRef} isRequired defaultValue={markdown} />
         </Flex>
         <Flex mt="1.5em" justify="end">
           <Button colorScheme="blue" mr="0.8em" type="submit">

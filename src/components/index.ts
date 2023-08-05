@@ -1,3 +1,3 @@
-export * from "./Card";
 export * from "./NoteForm";
+export * from "./NoteCard";
 export * from "./NotesList";

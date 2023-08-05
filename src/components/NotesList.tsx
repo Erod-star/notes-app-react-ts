@@ -26,7 +26,7 @@ export const NotesList = ({ notes, title, selectedTags }: NotesListProps) => {
   }, [notes, title, selectedTags]);
 
   return (
-    <Wrap>
+    <Wrap spacing="6">
       {/* <Wrap className={`${styles.}`}> */}
       {filteredNotes.map(({ id, title, tags }) => {
         return (

@@ -44,9 +44,7 @@ export const NoteCard = ({ id, title, tags }: NoteCardProps) => {
             {tags.map(({ id, label }) => {
               return (
                 <WrapItem key={id}>
-                  <ChakraTag colorScheme="blue" mr="2">
-                    {label}
-                  </ChakraTag>
+                  <ChakraTag colorScheme="blue">{label}</ChakraTag>
                 </WrapItem>
               );
             })}

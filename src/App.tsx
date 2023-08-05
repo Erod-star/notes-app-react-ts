@@ -4,7 +4,7 @@ import { v4 as uuidV4 } from "uuid";
 import { Box } from "@chakra-ui/react";
 
 import { RawNote, Tag, NoteData } from "./interfaces";
-import { NewNoteView, HomeView, NoteView } from "./views";
+import { NewNoteView, HomeView, NoteView, EditNoteView } from "./views";
 import { useLocalStorage } from "./hooks";
 import { NoteLayout } from "./views/NoteView/NoteLayout";
 
@@ -30,8 +30,51 @@ const App = () => {
     });
   };
 
+  const onUpdateNote = (id: string, { tags, ...data }: NoteData) => {
+    // ? 1st approach (not so sure...)
+    // const notesFiltereds = notes.filter((note) => note.id !== id);
+    // setNotes(() => {
+    //   return [
+    //     ...notesFiltereds,
+    //     { ...data, id, tagsIds: tags.map((tag) => tag.id) },
+    //   ];
+    // });
+    // ? 2nd approach
+    setNotes((prevNotes) => {
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagsIds: tags.map((tag) => tag.id) };
+        }
+        return note;
+      });
+    });
+  };
+
+  const onDeleteNote = (id: string) => {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((note) => note.id !== id);
+    });
+  };
+
   const addTag = (tag: Tag) => {
     setTags((prev) => [...prev, tag]);
+  };
+
+  const onUpdateTag = (id: string, label: string) => {
+    setTags((prevTags) => {
+      return prevTags.map((tag) => {
+        if (tag.id == id) {
+          return { ...tag, label };
+        }
+        return tag;
+      });
+    });
+  };
+
+  const onDeleteTag = (id: string) => {
+    setTags((prevTags) => {
+      return prevTags.filter((tag) => tag.id !== id);
+    });
   };
 
   return (
@@ -39,7 +82,14 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={<HomeView availableTags={tags} notes={notesWithTags} />}
+          element={
+            <HomeView
+              availableTags={tags}
+              notes={notesWithTags}
+              onUpdateTag={onUpdateTag}
+              onDeleteTag={onDeleteTag}
+            />
+          }
         />
         <Route
           path="/new"
@@ -52,8 +102,17 @@ const App = () => {
           }
         />
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<NoteView />} />
-          <Route path="edit" element={<NoteView />} />
+          <Route index element={<NoteView onDelete={onDeleteNote} />} />
+          <Route
+            path="edit"
+            element={
+              <EditNoteView
+                onSubmit={onUpdateNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
+          />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
