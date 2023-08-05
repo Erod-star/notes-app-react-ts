@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import {
   Card,
   CardHeader,
-  Heading,
   CardBody,
+  Heading,
   Center,
   Wrap,
   WrapItem,

@@ -2,6 +2,7 @@ import { Wrap, WrapItem } from "@chakra-ui/react";
 import { Note, Tag } from "../interfaces";
 import { useMemo } from "react";
 import { NoteCard } from "./NoteCard";
+import { Empty } from "./Empty";
 
 // import styles from "./NoteCard/NoteCard.module.css";
 
@@ -26,15 +27,20 @@ export const NotesList = ({ notes, title, selectedTags }: NotesListProps) => {
   }, [notes, title, selectedTags]);
 
   return (
-    <Wrap spacing="6">
-      {/* <Wrap className={`${styles.}`}> */}
-      {filteredNotes.map(({ id, title, tags }) => {
-        return (
-          <WrapItem w="240px" minH="160px" key={id}>
-            <NoteCard id={id} title={title} tags={tags} />
-          </WrapItem>
-        );
-      })}
-    </Wrap>
+    <>
+      {filteredNotes.length > 0 ? (
+        <Wrap spacing="6">
+          {filteredNotes.map(({ id, title, tags }) => {
+            return (
+              <WrapItem w="240px" minH="160px" key={id}>
+                <NoteCard id={id} title={title} tags={tags} />
+              </WrapItem>
+            );
+          })}
+        </Wrap>
+      ) : (
+        <Empty />
+      )}
+    </>
   );
 };
